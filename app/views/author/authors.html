@@ -1,0 +1,24 @@
+<div class="row">
+  <h4 class="col-sm-10">Authors</h4>
+  <div class="col-sm-2">
+    <a href="#/author-new" class="btn btn-primary btn-xs">New author</a>
+  </div>
+
+  <table class="table table-striped">
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Surnames</th>
+      <th>Actions</th>
+    </tr>
+    <tr ng-repeat="author in authors">
+      <td>{{author.id}}</td>
+      <td>{{author.nombre}}</td>
+      <td>{{author.apellido}}</td>
+      <td>
+        <a href="#/authors/{{author.id}}" class="btn btn-primary btn-xs">See</a>
+      </td>
+    </tr>
+
+  </table>
+</div>
