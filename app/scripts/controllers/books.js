@@ -51,17 +51,6 @@ angular.module('angularApp')
         )
       };
 
-      $scope.save = function(data) {
-        BookServices.save(data,
-          function success(response) {
-            $location.path('/');
-          },
-          function error(errorResponse) {
-            console.log("Error:"	+	JSON.stringify(errorResponse));
-          }
-        )
-      };
-
   }])
 
   .controller('NewBookCtrl', ['$scope', '$location', 'BookServices', '$controller',

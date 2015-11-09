@@ -57,17 +57,6 @@ angular.module('angularApp')
         )
       };
 
-      $scope.save = function(data) {
-        AuthorServices.save(data,
-          function success(response) {
-            $location.path('#/authors');
-          },
-          function error(errorResponse) {
-            console.log("Error:"	+	JSON.stringify(errorResponse));
-          }
-        )
-      };
-
   }])
 
   .controller('NewAuthorCtrl', ['$scope', '$location', 'AuthorServices', '$controller',
