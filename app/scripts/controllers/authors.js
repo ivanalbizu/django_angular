@@ -1,41 +1,58 @@
-'use strict';
+(function() {
+  'use strict';
 
-/**
- * @ngdoc function
- * @name angularApp.controller:AutoresCtrl
- * @description
- * # AutoresCtrl
- * Controller of the angularApp
- */
-angular.module('angularApp')
-  .controller('AuthorsCtrl', ['$scope', 'AuthorsServices',
-    function ($scope, AuthorsServices) {
-      AuthorsServices.get({},
-        function success(response) {
-          $scope.authors = response;
-        },
-        function error(errorResponse) {
-          console.log("Error:"	+	JSON.stringify(errorResponse));
-        }
-      )
-  }])
+  /**
+   * @ngdoc function
+   * @name angularApp.controller:AutoresCtrl
+   * @description
+   * # AutoresCtrl
+   * Controller of the angularApp
+   */
+  angular.module('angularApp')
+    .controller('AuthorsCtrl', AuthorsCtrl)
+    .controller('CurrentAuthorCtrl', CurrentAuthorCtrl)
+    .controller('NewAuthorCtrl', NewAuthorCtrl);
 
-  .controller('CurrentAuthorCtrl', ['$scope', '$routeParams', '$location', 'AuthorServices',
-    function ($scope, $routeParams, $location, AuthorServices) {
+    //Controller
+    AuthorsCtrl.$inject = ['$rootScope', 'AuthorsServices'];
+    function AuthorsCtrl($rootScope, AuthorsServices) {
+
+      var vm = this;
+      var authors = [];
+
+      vm.getAll = function() {
+        AuthorsServices.get({},
+          function success(response) {
+            vm.authors = response;
+          },
+          function error(errorResponse) {
+            console.log("Error:"	+	JSON.stringify(errorResponse));
+          }
+        );
+        //console.log('Entra por controlador: "NewBookCtrl"');
+      }
+    }
+
+    //Controller
+    CurrentAuthorCtrl.$inject = ['$rootScope', '$routeParams', '$location', 'AuthorServices'];
+    function CurrentAuthorCtrl($rootScope, $routeParams, $location, AuthorServices) {
+
+      var vm = this;
+      var author = {};
 
       var authorId = $routeParams.id;
 
       AuthorServices.get({id: authorId},
         function success(response) {
           JSON.stringify(response);
-          $scope.author = response;
+          vm.author = response;
         },
         function error(errorResponse) {
           console.log("Error:"	+	JSON.stringify(errorResponse));
         }
       );
 
-      $scope.delete = function(authorId) {
+      vm.deleteAuthor = function(authorId) {
         AuthorServices.delete({id: authorId},
           function success(response) {
             $location.path('/');
@@ -43,10 +60,10 @@ angular.module('angularApp')
           function error(errorResponse) {
             console.log("Error:"	+	JSON.stringify(errorResponse));
           }
-        )
+        );
       };
 
-      $scope.update = function(data) {
+      vm.updateAuthor = function(data) {
         AuthorServices.update({id: authorId}, data,
           function success(response) {
             $location.path('#/authors');
@@ -54,14 +71,17 @@ angular.module('angularApp')
           function error(errorResponse) {
             console.log("Error:"	+	JSON.stringify(errorResponse));
           }
-        )
+        );
       };
+    }
 
-  }])
+    //Controller
+    NewAuthorCtrl.$inject = ['$rootScope', '$location', 'AuthorServices'];
+    function NewAuthorCtrl($rootScope, $location, AuthorServices) {
 
-  .controller('NewAuthorCtrl', ['$scope', '$location', 'AuthorServices', '$controller',
-    function ($scope, $location, AuthorServices, $controller) {
-      $scope.save = function(data) {
+      var vm = this;
+
+      vm.saveAuthor = function(data) {
         AuthorServices.save(data,
           function success(response) {
             $location.path('#/authors');
@@ -69,7 +89,8 @@ angular.module('angularApp')
           function error(errorResponse) {
             alert("Campos incompletos");
           }
-        )
+        );
       };
+    }
 
-  }]);
+})();

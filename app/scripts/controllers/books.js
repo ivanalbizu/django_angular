@@ -1,35 +1,50 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('angularApp')
+  angular.module('angularApp')
+    .controller('BookCtrl', BookCtrl)
+    .controller('CurrentBookCtrl', CurrentBookCtrl)
+    .controller('NewBookCtrl', NewBookCtrl);
 
-  .controller('BookCtrl', ['$scope', 'BooksServices',
-    function ($scope, BooksServices) {
+
+    //Controller
+    BookCtrl.$inject = ['$rootScope', 'BooksServices'];
+    function BookCtrl($rootScope, BooksServices) {
+
+      var vm = this;
+      var books = [];
+
       BooksServices.get({},
         function success(response) {
-          $scope.books = response;
+          vm.books = response;
         },
         function error(errorResponse) {
           console.log("Error:"	+	JSON.stringify(errorResponse));
         }
       )
-  }])
+    };
 
-  .controller('CurrentBookCtrl', ['$scope', '$routeParams', '$location', 'BookServices',
-    function ($scope, $routeParams, $location, BookServices) {
+    //Controller
+    CurrentBookCtrl.$inject = ['$rootScope', '$routeParams', '$location', 'BookServices'];
+    function CurrentBookCtrl ($rootScope, $routeParams, $location, BookServices) {
+
+      var vm = this;
+      var book = {};
 
       var bookId = $routeParams.id;
 
       BookServices.get({id: bookId},
         function success(response) {
           JSON.stringify(response);
-          $scope.book = response;
+          vm.book = response;
         },
         function error(errorResponse) {
           console.log("Error:"	+	JSON.stringify(errorResponse));
         }
       );
 
-      $scope.delete = function(bookId) {
+      vm.deleteBook = function(id) {
+        console.log('evento deleteBook');
         BookServices.delete({id: bookId},
           function success(response) {
             $location.path('/');
@@ -37,10 +52,11 @@ angular.module('angularApp')
           function error(errorResponse) {
             console.log("Error:"	+	JSON.stringify(errorResponse));
           }
-        )
-      };
+        );
+      }
 
-      $scope.update = function(data) {
+      vm.updateBook = function(data) {
+        console.log('evento updateBook');
         BookServices.update({id: bookId}, data,
           function success(response) {
             $location.path('/');
@@ -49,13 +65,16 @@ angular.module('angularApp')
             console.log("Error:"	+	JSON.stringify(errorResponse));
           }
         )
-      };
+      }
+    };
 
-  }])
+    //Controller
+    NewBookCtrl.$inject = ['$rootScope', '$location', 'BookServices', '$controller', '$uibModal'];
+    function NewBookCtrl ($rootScope, $location, BookServices, $controller, $uibModal) {
 
-  .controller('NewBookCtrl', ['$scope', '$location', 'BookServices', '$controller',
-    function ($scope, $location, BookServices, $controller) {
-      $scope.save = function(data) {
+      var vm = this;
+
+      vm.saveBook = function(data) {
         BookServices.save(data,
           function success(response) {
             $location.path('/');
@@ -66,4 +85,43 @@ angular.module('angularApp')
         )
       };
 
-  }]);
+
+      vm.open = function (size, authorsItem) {
+
+        var modalInstance = $uibModal.open({
+          templateUrl: './views/book/modal-list-authors.html',
+          controller: function($rootScope, $uibModalInstance) {
+            $rootScope.authorsItem = authorsItem;
+            $rootScope.selected = {
+              authorItem: $rootScope.authorsItem[0],
+            };
+
+            window.onhashchange = function() {
+              $uibModalInstance.dismiss('cancel');
+            };
+
+            $rootScope.ok = function () {
+              $uibModalInstance.close($rootScope.selected.authorItem);
+            };
+
+            $rootScope.cancel = function () {
+              $uibModalInstance.dismiss('cancel');
+            };
+          },
+          size: size,
+          resolve: {
+            authorsItem: function () {
+              return $rootScope.authorsItem;
+            }
+          }
+        });
+
+      };
+
+      var AuthorsCtrl = $controller('AuthorsCtrl');
+      AuthorsCtrl.getAll();
+      $rootScope.AuthorsCtrl = AuthorsCtrl;
+
+    };
+
+})();
