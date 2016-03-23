@@ -19,7 +19,13 @@
       'ngTouch',
       'ui.bootstrap'
     ])
-    .config(config);
+    .config(config)
+    .constant('URL_API', {
+      BOOKS:    'http://127.0.0.1:8000/books',
+      BOOK:     'http://127.0.0.1:8000/books/:id',
+      AUTHORS:  'http://127.0.0.1:8000/authors',
+      AUTHOR:   'http://127.0.0.1:8000/authors/:id'
+    });
 
     function config($routeProvider) {
       $routeProvider
@@ -60,4 +66,5 @@
         //No Necesario para GET
         //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     }
+
 })();

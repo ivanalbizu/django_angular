@@ -85,3 +85,6 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+.header {
+  border-bottom: 0;
+}

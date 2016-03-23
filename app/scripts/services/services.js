@@ -8,10 +8,10 @@
     .factory('AuthorsServices', AuthorsServices);
 
 
-    BookServices.$inject = ['$resource'];
-    function BookServices($resource) {
+    BookServices.$inject = ['$resource', 'URL_API'];
+    function BookServices($resource, URL_API) {
       return $resource(
-        'http://127.0.0.1:8000/books/:id', {}, {
+        URL_API.BOOK, {}, {
           get: {method: 'GET', cache: false, isArray: false},
           save: {method: 'POST', cache: false, isArray: false},
           update: {method: 'PUT', cache: false, isArray: false},
@@ -19,18 +19,18 @@
         });
     }
 
-    BooksServices.$inject = ['$resource'];
-    function BooksServices($resource) {
+    BooksServices.$inject = ['$resource', 'URL_API'];
+    function BooksServices($resource, URL_API) {
       return $resource(
-        'http://127.0.0.1:8000/books', {}, {
+        URL_API.BOOKS, {}, {
           get: {method: 'GET', cache: false, isArray: true}
         });
     }
 
-    AuthorServices.$inject = ['$resource'];
-    function AuthorServices($resource) {
+    AuthorServices.$inject = ['$resource', 'URL_API'];
+    function AuthorServices($resource, URL_API) {
       return $resource(
-        'http://127.0.0.1:8000/authors/:id', {}, {
+        URL_API.AUTHOR, {}, {
           get: {method: 'GET', cache: false, isArray: false},
           save: {method: 'POST', cache: false, isArray: false},
           update: {method: 'PUT', cache: false, isArray: false},
@@ -38,10 +38,10 @@
         });
     }
 
-    AuthorsServices.$inject = ['$resource'];
-    function AuthorsServices($resource) {
+    AuthorsServices.$inject = ['$resource', 'URL_API'];
+    function AuthorsServices($resource, URL_API) {
       return $resource(
-        'http://127.0.0.1:8000/authors', {}, {
+        URL_API.AUTHORS, {}, {
           get: {method: 'GET', cache: false, isArray: true}
         });
     }
